@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import { Grid, TextField, MenuItem, Button, makeStyles } from '@mui/material';
 import useForm from './useForm';
+import { connect } from 'react-redux';
+import * as actions from "../actions/book"
 
 
 
@@ -8,7 +10,7 @@ const initalFieldValues = {
     isbn: '',
     name:'',
     author:'',
-    price:''
+    preco:''
 }
 
 const authors = [
@@ -25,6 +27,8 @@ const authors = [
       label: 'Author3',
     },
   ];
+
+  
 const BookForm = (props) => {
 
     const [selectedAuthor, setSelectedAuthor] = useState("");
@@ -61,11 +65,11 @@ const BookForm = (props) => {
           isValid = false;
         }
     
-        if (!values.price) {
-          errors.price = 'Price field cannot be empty';
+        if (!values.preco) {
+          errors.preco = 'Price field cannot be empty';
           isValid = false;
-        } else if (values.price < 0) {
-          errors.price = 'Price cannot be negative';
+        } else if (values.preco < 0) {
+          errors.preco = 'Price cannot be negative';
           isValid = false;
         }
     
@@ -78,9 +82,10 @@ const BookForm = (props) => {
       const handleSubmit = e => {
         e.preventDefault();
     
-        if (validate()) {
-          // call your submit function here
-          return window.alert('Submitted successfully');
+        if (validate) {
+            console.log(values)
+          props.createBook(values,()=>{window.alert('Created successfully')})
+
         } else {
             return window.alert('Submitted failed')
         }
@@ -132,12 +137,12 @@ const BookForm = (props) => {
                         style: { width: "77%" },
                         }}
                         select
-                        value={selectedAuthor}
-                        onChange={(e) => setSelectedAuthor(e.target.value)}
+                        value={values.author}
+                        onChange={(e) => handleInputChange({...values, author: e.target.value})}
                         error={errors.author}
                         helperText={errors.author}
                     >
-                        <MenuItem value={null}>Please select an Author</MenuItem>
+                        <MenuItem value={""}>Please select an Author</MenuItem>
                         {authors.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}
@@ -147,7 +152,7 @@ const BookForm = (props) => {
                     </div>
 
                 <TextField margin="normal" required
-                    name="price"
+                    name="preco"
                     variant='outlined'
                     label="Price"
                     value = {values.price}
@@ -183,5 +188,15 @@ const BookForm = (props) => {
     );
 }
 
+const mapStateToProps = state => ({  
+    bookList: state.book.list
+})
 
-export default BookForm;
+const mapActionToProps = {
+
+    //from actions/book.js
+    createBook: actions.create,
+    updateBook: actions.update
+}
+
+export default connect (mapStateToProps, mapActionToProps)(BookForm);
