@@ -2,23 +2,22 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import * as actions from "../actions/book";
 import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel} from '@mui/material';
-import { styled } from '@mui/styles';
 
 import BookForm from './BookForm';
+//import Pagination from './Pagination';
 
-const styles = (theme) => ({
+/*const styles = (theme) => ({
   paper: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
   }
   // define other styles here
-});
+});*/
 
 const Books = (props) => {
 
   const [orderBy, setOrderBy] = useState('isbn');
   const [order, setOrder] = useState('asc');
-  const [currentPage, setCurrentPage] = useState(0);
 
   const handleSort = useCallback((property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -26,15 +25,12 @@ const Books = (props) => {
     setOrder(isAsc ? 'desc' : 'asc');
   }, [orderBy, order]);
 
-  const handlePageChange = ({ selected: selectedPage }) => {
-    setCurrentPage(selectedPage);
-  };
 
   useEffect(() => {
     props.fetchAllBooks()
   }, [])//componentDidMount
 
-  const sortedBooks = props.bookList.sort((a, b) => {
+    props.bookList.sort((a, b) => {
     const isDesc = order === 'desc';
     if (orderBy === 'name') {
       return isDesc ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name);
@@ -47,10 +43,6 @@ const Books = (props) => {
     }
     return isDesc ? b.isbn.localeCompare(a.isbn) : a.isbn.localeCompare(b.isbn);
   });
-
-  const PER_PAGE = 5;
-  const offset = currentPage * PER_PAGE;
-  const pageCount = Math.ceil(sortedBooks.length / PER_PAGE);
 
   return ( 
 
@@ -118,6 +110,7 @@ const Books = (props) => {
                             </TableBody>
                             
                     </Table>
+                 
                 </TableContainer>
             </Grid>
         </Grid>

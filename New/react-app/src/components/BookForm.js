@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import { Grid, TextField, MenuItem, Button, makeStyles } from '@mui/material';
 import useForm from './useForm';
 
+
+
 const initalFieldValues = {
     isbn: '',
     name:'',
@@ -33,9 +35,66 @@ const BookForm = (props) => {
         handleInputChange
     } =  useForm(initalFieldValues)
 
+    const [errors, setErrors] = useState({});
+
+    //validations
+    
+    const validate = () => {
+        let errors = {};
+        let isValid = true;
+    
+        if (!values.isbn) {
+          errors.isbn = 'ISBN field cannot be empty';
+          isValid = false;
+        } else if (!/^\d{13}$/.test(values.isbn)) {
+          errors.isbn = 'ISBN must be a 13 digit number';
+          isValid = false;
+        }
+    
+        if (!values.name) {
+          errors.name = 'Name field cannot be empty';
+          isValid = false;
+        }
+    
+        if (!selectedAuthor) {
+          errors.author = 'Author field cannot be empty';
+          isValid = false;
+        }
+    
+        if (!values.price) {
+          errors.price = 'Price field cannot be empty';
+          isValid = false;
+        } else if (values.price < 0) {
+          errors.price = 'Price cannot be negative';
+          isValid = false;
+        }
+    
+        setErrors(errors);
+        return isValid;
+      };
+      
+      //submit new book validations
+
+      const handleSubmit = e => {
+        e.preventDefault();
+    
+        if (validate()) {
+          // call your submit function here
+          return window.alert('Submitted successfully');
+        } else {
+            return window.alert('Submitted failed')
+        }
+      };
+
+      //reset fields func
+      const handleReset = () => {
+        setValues(initalFieldValues);
+        setSelectedAuthor("");
+      };
+
 
     return ( 
-        <form autoComplete='off' noValidate>
+        <form autoComplete='off' noValidate onSubmit={handleSubmit}>
             <Grid container padding={2}>
                 <Grid item xs={6}>
                     <TextField margin="normal" required
@@ -44,6 +103,8 @@ const BookForm = (props) => {
                     label="ISBN"
                     value = {values.isbn}
                     onChange = {handleInputChange}
+                    error={errors.isbn}
+                    helperText={errors.isbn}
                     />
 
                     <TextField margin="normal" required
@@ -52,6 +113,8 @@ const BookForm = (props) => {
                     label="Name"
                     value = {values.name}
                     onChange = {handleInputChange}
+                    error={errors.name}
+                    helperText={errors.name}
                     />
 
                 </Grid>  
@@ -71,6 +134,8 @@ const BookForm = (props) => {
                         select
                         value={selectedAuthor}
                         onChange={(e) => setSelectedAuthor(e.target.value)}
+                        error={errors.author}
+                        helperText={errors.author}
                     >
                         <MenuItem value={null}>Please select an Author</MenuItem>
                         {authors.map((option) => (
@@ -87,21 +152,30 @@ const BookForm = (props) => {
                     label="Price"
                     value = {values.price}
                     onChange = {handleInputChange}
+                    error={errors.price}
+                    helperText={errors.price}
                 />
 
-            
                 <Grid container spacing={0.5}>
+
                     <Grid item>
-                        <Button variant="contained" size="small">
+                        <Button variant="contained" size="small" type="submit">
                         Submit Book
                         </Button>
                     </Grid>
+
                     <Grid item>
-                        <Button variant="contained" color="secondary" size="small">
+                        <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        onClick={handleReset}
+                        >
                         Reset Fields
-                        </Button>
+                    </Button>
                     </Grid>
-                    </Grid>
+
+                 </Grid>
                 
             </Grid>
         </Grid>
