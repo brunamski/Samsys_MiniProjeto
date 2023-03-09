@@ -1,45 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import * as actions from "../actions/book";
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,} from '@mui/material';
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel} from '@mui/material';
 import { styled } from '@mui/styles';
 
 import BookForm from './BookForm';
 
 const styles = (theme) => ({
-    paper: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    }
-    // define other styles here
-  });
+  paper: {
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
+  }
+  // define other styles here
+});
 
 const Books = (props) => {
-//const [isbn, setIsbn] = useState(0000000000001)
 
-        useEffect(() => {
-        props.fetchAllBooks()
-    }, [])//componentDidMount
+  const [orderBy, setOrderBy] = useState('isbn');
+  const [order, setOrder] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(0);
 
-    return ( 
-    
+  const handleSort = useCallback((property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrderBy(property);
+    setOrder(isAsc ? 'desc' : 'asc');
+  }, [orderBy, order]);
+
+  const handlePageChange = ({ selected: selectedPage }) => {
+    setCurrentPage(selectedPage);
+  };
+
+  useEffect(() => {
+    props.fetchAllBooks()
+  }, [])//componentDidMount
+
+  const sortedBooks = props.bookList.sort((a, b) => {
+    const isDesc = order === 'desc';
+    if (orderBy === 'name') {
+      return isDesc ? b.name.localeCompare(a.name) : a.name.localeCompare(b.name);
+    }
+    if (orderBy === 'author') {
+      return isDesc ? b.author.localeCompare(a.author) : a.author.localeCompare(b.author);
+    }
+    if (orderBy === 'preco') {
+      return isDesc ? b.preco - a.preco : a.preco - b.preco;
+    }
+    return isDesc ? b.isbn.localeCompare(a.isbn) : a.isbn.localeCompare(b.isbn);
+  });
+
+  const PER_PAGE = 5;
+  const offset = currentPage * PER_PAGE;
+  const pageCount = Math.ceil(sortedBooks.length / PER_PAGE);
+
+  return ( 
+
     <Paper>
-        <Grid container>
-            <Grid item xs={6}>
-                <BookForm/>
-            </Grid>
-            <Grid item xs={6}>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ISBN</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Author</TableCell>
-                                <TableCell>Price</TableCell>
-                            </TableRow>
+      <Grid container>
+        <Grid item xs={6}>
+          <BookForm/>
+        </Grid>
+        <Grid item xs={6}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'isbn'}
+                      direction={order}
+                      onClick={() => handleSort('isbn')}
+                    >
+                      ISBN
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'name'}
+                      direction={order}
+                      onClick={() => handleSort('name')}
+                    >
+                      Name
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'author'}
+                      direction={order}
+                      onClick={() => handleSort('author')}
+                    >
+                      Author
+                    </TableSortLabel>
+                  </TableCell>
+                  <TableCell>
+                    <TableSortLabel
+                      active={orderBy === 'preco'}
+                      direction={order}
+                      onClick={() => handleSort('preco')}
+                    >
+                      Price
+
+                            </TableSortLabel>
+                            </TableCell>
+                        </TableRow>
                         </TableHead>
-                        <TableBody>
+
+                            <TableBody>
                                 {
                                     props.bookList.map((record, index) => {
                                         return (<TableRow key={index} hover>
@@ -51,6 +116,7 @@ const Books = (props) => {
                                     })
                                 }
                             </TableBody>
+                            
                     </Table>
                 </TableContainer>
             </Grid>
