@@ -21,6 +21,7 @@ const Books = (props) => {
 
   const [orderBy, setOrderBy] = useState('isbn');
   const [order, setOrder] = useState('asc');
+  const [currentIsbn, setCurrentIsbn] = useState(0)
 
   const handleSort = useCallback((property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -40,11 +41,7 @@ const Books = (props) => {
     return props.deleteBook(isbn,()=>{window.alert('Deleted successfully')})
   }
 
-  const handleUpdate = (isbn) => {
-    
-  }
-
-
+  const [selectedBook, setSelectedBook] = useState(null);
 
 
     props.bookList.sort((a, b) => {
@@ -66,7 +63,7 @@ const Books = (props) => {
     <Paper>
       <Grid container>
         <Grid item xs={6}>
-          <BookForm/>
+        <BookForm {...({ currentIsbn, setCurrentIsbn })}/>
         </Grid>
         <Grid item xs={6}>
           <TableContainer>
@@ -125,7 +122,7 @@ const Books = (props) => {
                                               <ButtonGroup variant="text">
 
                                               <Button><EditIcon color="primary"
-                                                       onClick={() => handleUpdate(record.isbn)}/>
+                                                       onClick={() => { setCurrentIsbn(record.isbn)}}/>
                                               </Button>
 
                                               <Button><DeleteIcon color="secondary"

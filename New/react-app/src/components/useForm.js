@@ -11,15 +11,23 @@ const useForm = (initialFieldValues, validate) => {
           ...values,
           ...fieldValue
         });
-        validate({ ...values, ...fieldValue });
+        validate({ fieldValue });
       };
+
+      const resetForm = () => {
+        setValues({
+            ...initialFieldValues
+        })
+        setErrors({})
+    }
 
     return {
         values,
         setValues,
         errors,
         setErrors,
-        handleInputChange
+        handleInputChange,
+        resetForm
     };
 }
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Grid, TextField, MenuItem, Button, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
 import useForm from './useForm';
 import { connect } from 'react-redux';
@@ -32,12 +32,14 @@ const authors = [
 const BookForm = (props) => {
 
     const [selectedAuthor, setSelectedAuthor] = useState("");
+    const [currentIsbn, setCurrentIsbn] = useState(0);
+
 
     const {
         values,
         setValues,
         handleInputChange
-    } =  useForm(initalFieldValues)
+    } =  useForm(initalFieldValues, setCurrentIsbn)
 
     const [errors, setErrors] = useState({});
 
@@ -75,9 +77,7 @@ const BookForm = (props) => {
         errors.preco = 'Price must be numeric with up to two decimal places';
         isValid = false;
       }
-      
-    
-    
+
       setErrors(errors);
       return isValid;
     }
@@ -87,15 +87,22 @@ const BookForm = (props) => {
       
       //submit new book validations
 
-      const handleSubmit = e => {
-        e.preventDefault();
-    
+      const handleSubmit = () => {
         if (validate()) {
-          return props.createBook(values,()=>{window.alert('Created successfully')})
+          if (props.currentIsbn !== 0 && props.currentIsbn !== null) { 
+            props.updateBook(props.currentIsbn, values, () => { 
+              window.alert('Updated successfully');
+            });
+          } else if (props.currentIsbn === 0 || props.currentIsbn === null) {
+            props.createBook(values, () => { 
+              window.alert('Created successfully');
+            });
+          }
         } else {
-          return window.alert('Submit failed')
+          window.alert('Submit failed');
         }
       };
+      
 
       //reset fields func
       const handleReset = () => {
@@ -103,6 +110,12 @@ const BookForm = (props) => {
         setSelectedAuthor("");
       };
 
+      useEffect(() =>{
+        if(props.currentIsbn !== 0)
+        setValues({
+          ...props.bookList.find(x => x.isbn === props.currentIsbn)
+        })
+      },[props.currentIsbn])
 
 
   //material-ui select -> dropDown
