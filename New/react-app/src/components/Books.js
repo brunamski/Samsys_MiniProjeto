@@ -7,6 +7,8 @@ import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Ta
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BookForm from './BookForm';
+import Pagination from './Pagination';
+
 //import Pagination from './Pagination';
 
 /*const styles = (theme) => ({
@@ -136,10 +138,14 @@ const Books = (props) => {
                                 }
                             </TableBody>
                             
-                    </Table>
-                 
+                  </Table>
+                            
                 </TableContainer>
+                            <Grid item xs={12}>
+                            <Pagination/>
+                            </Grid>
             </Grid>
+              
         </Grid>
     </Paper>
     );
