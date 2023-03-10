@@ -93,7 +93,7 @@ const BookForm = (props) => {
         if (validate()) {
           return props.createBook(values,()=>{window.alert('Created successfully')})
         } else {
-          return window.alert('Submitted failed')
+          return window.alert('Submit failed')
         }
       };
 

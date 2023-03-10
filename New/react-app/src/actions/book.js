@@ -37,7 +37,7 @@ export const create = (data, onSuccess) => dispatch => {
 
 export const update = (isbn, data, onSuccess) => dispatch => {
     data = formateData(data)
-    api.dCandidate().update(isbn, data)
+    api.book().update(isbn, data)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.UPDATE,
@@ -49,7 +49,7 @@ export const update = (isbn, data, onSuccess) => dispatch => {
 }
 
 export const Delete = (isbn, onSuccess) => dispatch => {
-    api.dCandidate().delete(isbn)
+    api.book().delete(isbn)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.DELETE,

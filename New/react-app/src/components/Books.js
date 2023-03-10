@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import * as actions from "../actions/book";
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel} from '@mui/material';
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Button, ButtonGroup} from '@mui/material';
+//import { toast } from 'react-toastify';
 
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import BookForm from './BookForm';
 //import Pagination from './Pagination';
 
@@ -29,6 +32,20 @@ const Books = (props) => {
   useEffect(() => {
     props.fetchAllBooks()
   }, [])//componentDidMount
+
+  
+  //const { addToast } = toast() 
+  const handleDelete = isbn => {
+    if(window.confirm('Are you sure you want to delete this book?'))
+    return props.deleteBook(isbn,()=>{window.alert('Deleted successfully')})
+  }
+
+  const handleUpdate = (isbn) => {
+    
+  }
+
+
+
 
     props.bookList.sort((a, b) => {
     const isDesc = order === 'desc';
@@ -104,6 +121,19 @@ const Books = (props) => {
                                             <TableCell>{record.name}</TableCell>
                                             <TableCell>{record.author}</TableCell>
                                             <TableCell>{record.preco}</TableCell>
+                                            <TableCell>
+                                              <ButtonGroup variant="text">
+
+                                              <Button><EditIcon color="primary"
+                                                       onClick={() => handleUpdate(record.isbn)}/>
+                                              </Button>
+
+                                              <Button><DeleteIcon color="secondary"
+                                                        onClick={() => handleDelete(record.isbn)}/>
+                                              </Button>
+
+                                              </ButtonGroup>
+                                            </TableCell>
                                         </TableRow>)
                                     })
                                 }
@@ -123,7 +153,9 @@ const mapStateToProps = state => ({
     })
 
 const mapActionToProps = {
-    fetchAllBooks: actions.fetchAll
+    fetchAllBooks: actions.fetchAll,
+    deleteBook: actions.Delete,
+    updateBook: actions.update
 }
 
 
