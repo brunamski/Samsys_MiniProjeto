@@ -5,14 +5,14 @@ const useForm = (initialFieldValues, validate) => {
     const [errors, setErrors] = useState({})
 
     const handleInputChange = e => {
-        const { name, value } = e.target
-        const fieldValue = { [name]: value }
+        const { name, value } = e.target;
+        const fieldValue = { [name]: value };
         setValues({
-            ...values,
-            ...fieldValue
-        })
-        validate(fieldValue)
-    }
+          ...values,
+          ...fieldValue
+        });
+        validate({ ...values, ...fieldValue });
+      };
 
     return {
         values,

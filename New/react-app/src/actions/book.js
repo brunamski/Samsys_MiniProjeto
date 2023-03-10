@@ -9,7 +9,7 @@ export const ACTION_TYPES = {
 
 const formateData = data => ({
     ...data,
-    preco: parseInt(data.preco)
+    preco: parseFloat(data.preco)
 })
 
 export const fetchAll = () => dispatch => {

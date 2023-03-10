@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Grid, TextField, MenuItem, Button, makeStyles } from '@mui/material';
+import { Grid, TextField, MenuItem, Button, FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
 import useForm from './useForm';
 import { connect } from 'react-redux';
 import * as actions from "../actions/book"
@@ -43,51 +43,57 @@ const BookForm = (props) => {
 
     //validations
     
-    const validate = () => {
-        let errors = {};
-        let isValid = true;
+    const validate = (fieldValues = values) => {
+      let errors = {};
+      let isValid = true;
     
-        if (!values.isbn) {
-          errors.isbn = 'ISBN field cannot be empty';
-          isValid = false;
-        } else if (!/^\d{13}$/.test(values.isbn)) {
-          errors.isbn = 'ISBN must be a 13 digit number';
-          isValid = false;
-        }
+      if (!fieldValues.isbn) {
+        errors.isbn = 'ISBN field cannot be empty';
+        isValid = false;
+      } else if (!/^\d{13}$/.test(fieldValues.isbn)) {
+        errors.isbn = 'ISBN must be a 13 digit number';
+        isValid = false;
+      }
     
-        if (!values.name) {
-          errors.name = 'Name field cannot be empty';
-          isValid = false;
-        }
+      if (!fieldValues.name) {
+        errors.name = 'Name field cannot be empty';
+        isValid = false;
+      }
     
-        if (!selectedAuthor) {
-          errors.author = 'Author field cannot be empty';
-          isValid = false;
-        }
+      if (!fieldValues.author) {
+        errors.author = 'Author field cannot be empty';
+        isValid = false;
+      }
     
-        if (!values.preco) {
-          errors.preco = 'Price field cannot be empty';
-          isValid = false;
-        } else if (values.preco < 0) {
-          errors.preco = 'Price cannot be negative';
-          isValid = false;
-        }
+      if (!fieldValues.preco && fieldValues.preco !== 0) {
+        errors.preco = 'Price field cannot be empty';
+        isValid = false;
+      } else if (fieldValues.preco < 0) {
+        errors.preco = 'Price field cannot be negative';
+        isValid = false;
+      } else if (!/^\d+(\.\d{1,2})?$/.test(fieldValues.preco)) {
+        errors.preco = 'Price must be numeric with up to two decimal places';
+        isValid = false;
+      }
+      
     
-        setErrors(errors);
-        return isValid;
-      };
+    
+      setErrors(errors);
+      return isValid;
+    }
+    
+    
+
       
       //submit new book validations
 
       const handleSubmit = e => {
         e.preventDefault();
     
-        if (validate) {
-            console.log(values)
-          props.createBook(values,()=>{window.alert('Created successfully')})
-
+        if (validate()) {
+          return props.createBook(values,()=>{window.alert('Created successfully')})
         } else {
-            return window.alert('Submitted failed')
+          return window.alert('Submitted failed')
         }
       };
 
@@ -98,11 +104,20 @@ const BookForm = (props) => {
       };
 
 
+
+  //material-ui select -> dropDown
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+      setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
     return ( 
         <form autoComplete='off' noValidate onSubmit={handleSubmit}>
             <Grid container padding={2}>
                 <Grid item xs={6}>
                     <TextField margin="normal" required
+                    style={{ width: '80%' }}
                     name="isbn"
                     variant='outlined'
                     label="ISBN"
@@ -113,6 +128,7 @@ const BookForm = (props) => {
                     />
 
                     <TextField margin="normal" required
+                    style={{ width: '80%' }}
                     name="name"
                     variant='outlined'
                     label="Name"
@@ -121,44 +137,43 @@ const BookForm = (props) => {
                     error={errors.name}
                     helperText={errors.name}
                     />
-
                 </Grid>  
+                
                 
                 <Grid item xs={6}>
                 
                 <div>
-                    <TextField required
-                        margin="normal"
-                        fullWidth
-                        id="outlined-select-author"
-                        label="Author"
-                        variant="outlined"
-                        SelectProps={{
-                        style: { width: "77%" },
-                        }}
-                        select
-                        value={values.author}
-                        onChange={(e) => handleInputChange({...values, author: e.target.value})}
-                        error={errors.author}
-                        helperText={errors.author}
-                    >
+                <FormControl variant="outlined"
+                margin="normal"
+                style={{ width: '80%' }}
+                {...(errors.author && { error: true })}>
+
+                    <InputLabel ref={inputLabel}>Author</InputLabel>
+                        <Select
+                            name="author"
+                            value={values.author}
+                            onChange={handleInputChange}
+                        >
                         <MenuItem value={""}>Please select an Author</MenuItem>
                         {authors.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                             {option.label}
                         </MenuItem>
                         ))}
-                    </TextField>
+                        </Select>
+                        {errors.author && <FormHelperText>{errors.author}</FormHelperText>}
+                    </FormControl>
                     </div>
 
                 <TextField margin="normal" required
+                    style={{ width: '80%' }}
                     name="preco"
                     variant='outlined'
                     label="Price"
-                    value = {values.price}
+                    value = {values.preco}
                     onChange = {handleInputChange}
-                    error={errors.price}
-                    helperText={errors.price}
+                    error={errors.preco}
+                    helperText={errors.preco}
                 />
 
                 <Grid container spacing={0.5}>
