@@ -5,6 +5,7 @@ export const ACTION_TYPES = {
     UPDATE: 'UPDATE',
     DELETE: 'DELETE',
     FETCH_ALL: 'FETCH_ALL',
+    FETCH_ISBN: 'FETCH_ISBN',
 }
 
 const formateData = data => ({
@@ -22,6 +23,18 @@ export const fetchAll = () => dispatch => {
         })
         .catch(err => console.log(err))
 }
+
+export const fetchByIsbn = (isbn) => (dispatch) => {
+    api.book()
+      .fetchByIsbn(isbn)
+      .then((response) => {
+        dispatch({
+          type: ACTION_TYPES.FETCH_ISBN,
+          payload: response.data,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
 
 export const create = (data, onSuccess) => dispatch => {
     data = formateData(data)

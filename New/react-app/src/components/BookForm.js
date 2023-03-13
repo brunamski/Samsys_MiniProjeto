@@ -89,7 +89,8 @@ const BookForm = (props) => {
       
       //submit new book validations
 
-      const handleSubmit = () => {
+      const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent page reload on form submission
         if (validate()) {
           if (props.currentIsbn !== 0 && props.currentIsbn !== null) { 
             props.updateBook(props.currentIsbn, values, () => { 
@@ -104,6 +105,10 @@ const BookForm = (props) => {
           window.alert('Submit failed');
         }
       };
+      
+      
+      
+      
       
 
       //reset fields func

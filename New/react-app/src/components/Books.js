@@ -1,29 +1,28 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import * as actions from "../actions/book";
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, Button, ButtonGroup} from '@mui/material';
+import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
+  TextField, Typography, Button, ButtonGroup} from '@mui/material';
 //import { toast } from 'react-toastify';
 
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BookForm from './BookForm';
 import Pagination from './Pagination';
+import NavBar from './NavBar';
 
-//import Pagination from './Pagination';
 
-/*const styles = (theme) => ({
-  paper: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(2),
-  }
-  // define other styles here
-});*/
 
 const Books = (props) => {
 
   const [orderBy, setOrderBy] = useState('isbn');
   const [order, setOrder] = useState('asc');
   const [currentIsbn, setCurrentIsbn] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(3);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBooks, setFilteredBooks] = useState([]);
+
 
   const handleSort = useCallback((property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -45,6 +44,28 @@ const Books = (props) => {
 
   const [selectedBook, setSelectedBook] = useState(null);
 
+
+
+
+
+  const handleSearchISBN = (e) => {
+    if (e.key === 'Enter') {
+      const result = props.bookList.find((book) => book.isbn === searchTerm);
+      if (result) {
+        setFilteredBooks([result]);
+        alert('Book Found.');
+      } else {
+        setFilteredBooks([]);
+        alert('Book not Found.');
+      }
+    }
+  };
+  
+
+
+
+
+  //sorting
 
     props.bookList.sort((a, b) => {
     const isDesc = order === 'desc';
@@ -70,6 +91,7 @@ const Books = (props) => {
         <Grid item xs={6}>
           <TableContainer>
             <Table>
+
               <TableHead>
                 <TableRow>
                   <TableCell>
@@ -139,11 +161,40 @@ const Books = (props) => {
                             </TableBody>
                             
                   </Table>
-                            
+
+                 
+                <Pagination align="left"
+                  totalItems={props.bookList.length}
+                  rowsPerPage={rowsPerPage}
+                />
+         
+
+                  
+                        <TextField
+                            label="Search by ISBN"
+                            variant="outlined"
+                            size="small"
+                            margin="dense"
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={handleSearchISBN}
+                          />
+
+                          <TableBody>
+                            {filteredBooks.map((record, index) => {
+                              return (
+                                <TableRow key={index} hover>
+                                  <TableCell>{record.isbn}</TableCell>
+                                  <TableCell>{record.name}</TableCell>
+                                  <TableCell>{record.author}</TableCell>
+                                  <TableCell>{record.preco}</TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>    
+
+
                 </TableContainer>
-                            <Grid item xs={12}>
-                            <Pagination/>
-                            </Grid>
+                            
             </Grid>
               
         </Grid>

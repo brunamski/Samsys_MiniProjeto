@@ -13,6 +13,12 @@ export const book = (state = initialState, action) => {
                 list: [...action.payload]
             }
 
+        case ACTION_TYPES.FETCH_ISBN:
+            return {
+                ...state,
+                list: state.list.map(x => x.isbn === action.payload.isbn ? action.payload : x)
+        }
+
         case ACTION_TYPES.CREATE:
             return {
                  ...state,
