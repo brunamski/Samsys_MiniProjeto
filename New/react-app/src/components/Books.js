@@ -75,8 +75,8 @@ const Books = (props) => {
     if (orderBy === 'author') {
       return isDesc ? b.author.localeCompare(a.author) : a.author.localeCompare(b.author);
     }
-    if (orderBy === 'preco') {
-      return isDesc ? b.preco - a.preco : a.preco - b.preco;
+    if (orderBy === 'price') {
+      return isDesc ? b.price - a.price : a.price - b.price;
     }
     return isDesc ? b.isbn.localeCompare(a.isbn) : a.isbn.localeCompare(b.isbn);
   });
@@ -123,9 +123,9 @@ const Books = (props) => {
                   </TableCell>
                   <TableCell>
                     <TableSortLabel
-                      active={orderBy === 'preco'}
+                      active={orderBy === 'price'}
                       direction={order}
-                      onClick={() => handleSort('preco')}
+                      onClick={() => handleSort('price')}
                     >
                       Price
 
@@ -141,7 +141,7 @@ const Books = (props) => {
                                             <TableCell>{record.isbn}</TableCell>
                                             <TableCell>{record.name}</TableCell>
                                             <TableCell>{record.author}</TableCell>
-                                            <TableCell>{record.preco}</TableCell>
+                                            <TableCell>{record.price}</TableCell>
                                             <TableCell>
                                               <ButtonGroup variant="text">
 
@@ -186,7 +186,7 @@ const Books = (props) => {
                                   <TableCell>{record.isbn}</TableCell>
                                   <TableCell>{record.name}</TableCell>
                                   <TableCell>{record.author}</TableCell>
-                                  <TableCell>{record.preco}</TableCell>
+                                  <TableCell>{record.price}</TableCell>
                                 </TableRow>
                               );
                             })}

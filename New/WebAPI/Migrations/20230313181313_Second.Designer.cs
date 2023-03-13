@@ -11,8 +11,8 @@ using WebAPI.Entities;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(BookDBContext))]
-    [Migration("20230304110436_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230313181313_Second")]
+    partial class Second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WebAPI.Models.Livro", b =>
+            modelBuilder.Entity("WebAPI.Entities.Book", b =>
                 {
                     b.Property<string>("isbn")
                         .HasColumnType("nvarchar(450)");
@@ -36,12 +36,12 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("preco")
+                    b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("isbn");
 
-                    b.ToTable("Livros");
+                    b.ToTable("Books");
                 });
 #pragma warning restore 612, 618
         }

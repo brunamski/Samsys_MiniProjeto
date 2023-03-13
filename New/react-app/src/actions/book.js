@@ -10,7 +10,7 @@ export const ACTION_TYPES = {
 
 const formateData = data => ({
     ...data,
-    preco: parseFloat(data.preco)
+    price: parseFloat(data.price)
 })
 
 export const fetchAll = () => dispatch => {

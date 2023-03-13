@@ -12,7 +12,7 @@ const initalFieldValues = {
     isbn: '',
     name:'',
     author:'',
-    preco:''
+    price:''
 }
 
 const authors = [
@@ -69,14 +69,14 @@ const BookForm = (props) => {
         isValid = false;
       }
     
-      if (!fieldValues.preco && fieldValues.preco !== 0) {
-        errors.preco = 'Price field cannot be empty';
+      if (!fieldValues.price && fieldValues.price !== 0) {
+        errors.price = 'Price field cannot be empty';
         isValid = false;
-      } else if (fieldValues.preco < 0) {
-        errors.preco = 'Price field cannot be negative';
+      } else if (fieldValues.price < 0) {
+        errors.price = 'Price field cannot be negative';
         isValid = false;
-      } else if (!/^\d+(\.\d{1,2})?$/.test(fieldValues.preco)) {
-        errors.preco = 'Price must be numeric with up to two decimal places';
+      } else if (!/^\d+(\.\d{1,2})?$/.test(fieldValues.price)) {
+        errors.price = 'Price must be numeric with up to two decimal places';
         isValid = false;
       }
 
@@ -187,13 +187,13 @@ const BookForm = (props) => {
 
                 <TextField margin="normal" required
                     style={{ width: '80%' }}
-                    name="preco"
+                    name="price"
                     variant='outlined'
                     label="Price"
-                    value = {values.preco}
+                    value = {values.price}
                     onChange = {handleInputChange}
-                    error={errors.preco}
-                    helperText={errors.preco}
+                    error={errors.price}
+                    helperText={errors.price}
                 />
 
                 <Grid container spacing={0.5}>

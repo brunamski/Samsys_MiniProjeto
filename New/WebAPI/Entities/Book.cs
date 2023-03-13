@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebAPI.Models
+namespace WebAPI.Entities
 {
-    public class Livro
+    public class Book
     {
         [Key]
         public string isbn { get; set; }
@@ -15,6 +15,6 @@ namespace WebAPI.Models
         public string author { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal preco { get; set; }
+        public decimal price { get; set; }
     }
 }

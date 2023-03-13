@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebAPI.Models;
+using WebAPI.Entities;
 
 #nullable disable
 
@@ -21,7 +21,7 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WebAPI.Models.Livro", b =>
+            modelBuilder.Entity("WebAPI.Entities.Book", b =>
                 {
                     b.Property<string>("isbn")
                         .HasColumnType("nvarchar(450)");
@@ -34,12 +34,12 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("preco")
+                    b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("isbn");
 
-                    b.ToTable("Livros");
+                    b.ToTable("Books");
                 });
 #pragma warning restore 612, 618
         }

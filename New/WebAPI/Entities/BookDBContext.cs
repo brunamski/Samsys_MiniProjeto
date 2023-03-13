@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Entities;
 
-namespace WebAPI.Models
+namespace WebAPI.Entities
 {
     public class BookDBContext: DbContext
     {
@@ -8,8 +9,6 @@ namespace WebAPI.Models
         {
 
         }
-
-        public DbSet<Livro> Livros { get; set; }
-
+        public DbSet<Book> Books { get; set; }
     }
 }
