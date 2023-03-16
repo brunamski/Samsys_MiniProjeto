@@ -29,8 +29,9 @@ namespace WebAPI
         {
             services.AddControllers();
             services.AddScoped<BookService>();
+            services.AddScoped<AuthorService>();
 
-            services.AddDbContext<BookDBContext>(options =>
+            services.AddDbContext<AppDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
 
 

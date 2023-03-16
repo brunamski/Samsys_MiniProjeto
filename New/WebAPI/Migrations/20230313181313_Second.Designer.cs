@@ -8,7 +8,7 @@ using WebAPI.Entities;
 
 namespace WebAPI.Migrations
 {
-    [DbContext(typeof(BookDBContext))]
+    [DbContext(typeof(AppDBContext))]
     [Migration("20230313181313_Second")]
     partial class Second
     {

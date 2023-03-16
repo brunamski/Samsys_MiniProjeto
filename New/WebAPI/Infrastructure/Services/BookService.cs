@@ -13,10 +13,10 @@ namespace WebAPI.Infrastructure.Services
     public class BookService
     {
 
-        private readonly BookDBContext _bookDbContext;
-        public BookService(BookDBContext bookDbContext)
+        private readonly AppDBContext _appDbContext;
+        public BookService(AppDBContext appDbContext)
         {
-            _bookDbContext = bookDbContext;
+            _appDbContext = appDbContext;
         }
 
 
@@ -26,7 +26,7 @@ namespace WebAPI.Infrastructure.Services
             string errorMessage = "Error occurred while obtaining data";
 
 
-            var checkLivros = await _bookDbContext.Books.ToListAsync();
+            var checkLivros = await _appDbContext.Books.ToListAsync();
             if (checkLivros == null)
             {
                 response.Success = false;
@@ -45,7 +45,7 @@ namespace WebAPI.Infrastructure.Services
             string notFoundMessage = "Book not found.";
             string foundMessage = "Book found.";
 
-            var livro = _bookDbContext.Books.Find(isbn);
+            var livro = _appDbContext.Books.Find(isbn);
 
             if (livro == null)
             {
@@ -76,7 +76,7 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            var checkIfLivroExists = _bookDbContext.Books.Find(objLivro.isbn);
+            var checkIfLivroExists = _appDbContext.Books.Find(objLivro.isbn);
             if (checkIfLivroExists != null && checkIfLivroExists.isbn == objLivro.isbn)
             {
                 response.Success = false;
@@ -84,8 +84,8 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            _bookDbContext.Books.Add(objLivro);
-            await _bookDbContext.SaveChangesAsync();
+            _appDbContext.Books.Add(objLivro);
+            await _appDbContext.SaveChangesAsync();
 
             response.Obj = new List<Book> { objLivro };
             response.Success = true;
@@ -107,7 +107,7 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            var livro = await _bookDbContext.Books.FindAsync(isbn);
+            var livro = await _appDbContext.Books.FindAsync(isbn);
 
             if (livro == null)
             {
@@ -120,8 +120,8 @@ namespace WebAPI.Infrastructure.Services
             livro.author = livroToUpdate.author;
             livro.price = livroToUpdate.price;
 
-            _bookDbContext.Entry(livro).State = EntityState.Modified;
-            await _bookDbContext.SaveChangesAsync();
+            _appDbContext.Entry(livro).State = EntityState.Modified;
+            await _appDbContext.SaveChangesAsync();
 
             response.Obj = new List<Book> { livro };
             response.Success = true;
@@ -137,12 +137,12 @@ namespace WebAPI.Infrastructure.Services
             string notFoundMessage = "Book not found.";
             string deletedMessage = "Book deleted."; 
             
-            var checkIfLivroExists = _bookDbContext.Books.Find(isbn);
+            var checkIfLivroExists = _appDbContext.Books.Find(isbn);
 
             if (checkIfLivroExists != null)
             {
-                _bookDbContext.Entry(checkIfLivroExists).State = EntityState.Deleted;
-                _bookDbContext.SaveChanges();
+                _appDbContext.Entry(checkIfLivroExists).State = EntityState.Deleted;
+                _appDbContext.SaveChanges();
 
                 response.Obj = new List<Book> { checkIfLivroExists };
                 response.Success = true;
