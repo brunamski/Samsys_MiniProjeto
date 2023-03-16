@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("autores/{Id}")]
-        public async Task<MessagingHelper<List<Author>>> GetAuthorByName(long Id)
+        [Route("autores/{authorId}")]
+        public async Task<MessagingHelper<List<Author>>> GetAuthorByName(long authorId)
         {
-            return await _service.GetAuthor(Id);
+            return await _service.GetAuthor(authorId);
         }
 
 
@@ -43,20 +43,20 @@ namespace WebAPI.Controllers
         }
 
         [HttpPatch]
-        [Route("atualizarAutor/{Id}")]
-        public async Task<MessagingHelper<List<Author>>> UpdateAuthor(long Id, [FromBody] Author authorToUpdate)
+        [Route("atualizarAutor/{authorId}")]
+        public async Task<MessagingHelper<List<Author>>> UpdateAuthor(long authorId, [FromBody] Author authorToUpdate)
         {
-            return await _service.UpdateAuthor(Id, authorToUpdate);
+            return await _service.UpdateAuthor(authorId, authorToUpdate);
         }
 
 
 
 
         [HttpDelete]
-        [Route("apagarAutor/{Id}")]
-        public async Task<MessagingHelper<List<Author>>> DeleteAuthor(long Id)
+        [Route("apagarAutor/{authorId}")]
+        public async Task<MessagingHelper<List<Author>>> DeleteAuthor(long authorId)
         {
-            return await _service.DeleteAuthor(Id);
+            return await _service.DeleteAuthor(authorId);
         }
     }
 }

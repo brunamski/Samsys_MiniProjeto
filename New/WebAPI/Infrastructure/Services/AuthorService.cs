@@ -122,15 +122,14 @@ namespace WebAPI.Infrastructure.Services
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> DeleteAuthor(long Id)
+        public async Task<MessagingHelper<List<Author>>> DeleteAuthor(long authorId)
         {
 
             var response = new MessagingHelper<List<Author>>();
-            string errorMessage = "Error occurred while deleting data";
             string notFoundMessage = "Author not found.";
             string deletedMessage = "Author deleted.";
 
-            var checkIfAuthorExists = _appDbContext.Authors.Find(Id);
+            var checkIfAuthorExists = _appDbContext.Authors.Find(authorId);
 
             if (checkIfAuthorExists != null)
             {
