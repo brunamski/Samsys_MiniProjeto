@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Entities;
 
@@ -10,9 +11,10 @@ using WebAPI.Entities;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class BookDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230316141211_entitiesUpdate")]
+    partial class entitiesUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,24 +23,7 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Author", b =>
-                {
-                    b.Property<long>("authorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("authorId"), 1L, 1);
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("authorId");
-
-                    b.ToTable("Authors");
-                });
-
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Book", b =>
+            modelBuilder.Entity("WebAPI.Entities.Book", b =>
                 {
                     b.Property<string>("isbn")
                         .HasColumnType("nvarchar(450)");
@@ -60,15 +45,37 @@ namespace WebAPI.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Book", b =>
+            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Author", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("WebAPI.Entities.Book", b =>
                 {
                     b.HasOne("WebAPI.Infrastructure.Entities.Author", "Author")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("authorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

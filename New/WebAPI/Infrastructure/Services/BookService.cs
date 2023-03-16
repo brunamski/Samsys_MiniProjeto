@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
 
 namespace WebAPI.Infrastructure.Services
@@ -117,7 +118,7 @@ namespace WebAPI.Infrastructure.Services
             }
 
             livro.name = livroToUpdate.name;
-            livro.author = livroToUpdate.author;
+            livro.authorId = livroToUpdate.authorId;
             livro.price = livroToUpdate.price;
 
             _appDbContext.Entry(livro).State = EntityState.Modified;

@@ -87,21 +87,21 @@ namespace WebAPI.Infrastructure.Services
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> UpdateAuthor(long Id, [FromBody] Author authorToUpdate)
+        public async Task<MessagingHelper<List<Author>>> UpdateAuthor(long authorId, [FromBody] Author authorToUpdate)
         {
             var response = new MessagingHelper<List<Author>>();
             string errorMessage = "Error occurred while updating data";
             string notFoundMessage = "Author not found.";
             string updatedMessage = "Author updated.";
 
-            if (Id != authorToUpdate.Id  || authorToUpdate.Name == null)
+            if (authorId != authorToUpdate.authorId  || authorToUpdate.name == null)
             {
                 response.Success = false;
                 response.Message = errorMessage;
                 return response;
             }
 
-            var author = await _appDbContext.Authors.FindAsync(Id);
+            var author = await _appDbContext.Authors.FindAsync(authorId);
 
             if (author == null)
             {
@@ -110,8 +110,8 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            author.Id = authorToUpdate.Id;
-            author.Name = authorToUpdate.Name;
+            author.authorId = authorToUpdate.authorId;
+            author.name = authorToUpdate.name;
 
             _appDbContext.Entry(author).State = EntityState.Modified;
             await _appDbContext.SaveChangesAsync();

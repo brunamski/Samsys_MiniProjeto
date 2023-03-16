@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
 using WebAPI.Infrastructure.Services;
 
