@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI
 {
@@ -27,6 +28,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<BookService>();
 
             services.AddDbContext<BookDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));

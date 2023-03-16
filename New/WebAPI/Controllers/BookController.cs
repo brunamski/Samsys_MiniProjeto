@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.Helpers;
+using WebAPI.Infrastructure.Services;
 
 namespace WebAPI.Controllers
 {
@@ -14,104 +16,52 @@ namespace WebAPI.Controllers
     public class BookController : ControllerBase
     {
 
-        private readonly BookDBContext _bookDbContext;
-
-        public BookController(BookDBContext bookDbContext)
+        private readonly BookService _service;
+        public BookController(BookService service)
         {
-            _bookDbContext = bookDbContext;
+            _service = service;
         }
 
 
 
         [HttpGet]
         [Route("livros")]
-        public async Task<ActionResult<Book>> GetLivros()
+        public async Task<MessagingHelper<List<Book>>> GetAll()
         {
-            var checkLivros = await _bookDbContext.Books.ToListAsync();
-            if (checkLivros == null)
-            {
-                return NoContent();
-            }
-            return Ok(checkLivros);
+            return await _service.GetLivros();
         }
 
         [HttpGet]
         [Route("livros/{isbn}")]
-        public async Task<ActionResult<Book>> GetLivro(string isbn)
+        public async Task<MessagingHelper<List<Book>>> GetBookByISBN(string isbn)
         {
-            var livro = _bookDbContext.Books.Find(isbn);
-
-            if (livro == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(livro);
+            return await _service.GetLivro(isbn);
         }
 
-
+        
         [HttpPost]
         [Route("criarLivro")]
-        public async Task<ActionResult<Book>> AddLivro(Book objLivro)
+        
+        public async Task<MessagingHelper<List<Book>>> AddLivro(Book objLivro)
         {
-            if (objLivro.isbn.Length != 13 || objLivro.price < 0 || objLivro == null)
-            {
-                return BadRequest();
-            }
-
-            var checkIfLivroExists = _bookDbContext.Books.Find(objLivro.isbn);
-            if (checkIfLivroExists != null && checkIfLivroExists.isbn == objLivro.isbn)
-            {
-                return Conflict();
-            }
-
-            _bookDbContext.Books.Add(objLivro);
-            await _bookDbContext.SaveChangesAsync();
-            return StatusCode(201);
+            return await _service.AddLivro(objLivro);
         }
-
+        
         [HttpPatch]
         [Route("atualizarLivro/{isbn}")]
-        public async Task<ActionResult<Book>> UpdateLivro(string isbn, [FromBody] Book livroToUpdate)
+        public async Task<MessagingHelper<List<Book>>> UpdateLivro(string isbn, [FromBody] Book livroToUpdate)
         {
-            if (isbn != livroToUpdate.isbn || livroToUpdate.isbn.Length != 13 || livroToUpdate.price < 0 || livroToUpdate == null)
-            {
-                return BadRequest();
-            }
-
-            var livro = await _bookDbContext.Books.FindAsync(isbn);
-
-            if (livro == null)
-            {
-                return NotFound();
-            }
-
-            livro.name = livroToUpdate.name;
-            livro.author = livroToUpdate.author;
-            livro.price = livroToUpdate.price;
-
-            _bookDbContext.Entry(livro).State = EntityState.Modified;
-            await _bookDbContext.SaveChangesAsync();
-            return Ok(livro);
+            return await _service.UpdateLivro(isbn, livroToUpdate);
         }
 
 
 
-
+        
         [HttpDelete]
         [Route("apagarLivro/{isbn}")]
-        public async Task<ActionResult<Book>> DeleteLivro(string isbn)
+        public async Task<MessagingHelper<List<Book>>> DeleteLivro(string isbn)
         {
-
-            var checkIfLivroExists = _bookDbContext.Books.Find(isbn);
-
-            if (checkIfLivroExists != null)
-            {
-                _bookDbContext.Entry(checkIfLivroExists).State = EntityState.Deleted;
-                _bookDbContext.SaveChanges();
-                return StatusCode(204,"Deleted");
-            }
-            return NotFound();
+            return await _service.DeleteLivro(isbn);
         }
     }
 }
