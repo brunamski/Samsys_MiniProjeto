@@ -11,8 +11,8 @@ using WebAPI.Entities;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230316145701_Update")]
-    partial class Update
+    [Migration("20230316163238_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,20 +57,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("isbn");
 
-                    b.HasIndex("authorId");
-
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Book", b =>
-                {
-                    b.HasOne("WebAPI.Infrastructure.Entities.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("authorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
                 });
 #pragma warning restore 612, 618
         }

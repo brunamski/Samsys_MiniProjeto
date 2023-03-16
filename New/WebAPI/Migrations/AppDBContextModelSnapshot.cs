@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Entities;
 
@@ -11,10 +10,9 @@ using WebAPI.Entities;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230316141700_entitiesUpdate2")]
-    partial class entitiesUpdate2
+    partial class AppDBContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,17 +23,17 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Infrastructure.Entities.Author", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("authorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("authorId"), 1L, 1);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("authorId");
 
                     b.ToTable("Authors");
                 });
@@ -57,25 +55,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("isbn");
 
-                    b.HasIndex("authorId");
-
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Book", b =>
-                {
-                    b.HasOne("WebAPI.Infrastructure.Entities.Author", "Author")
-                        .WithMany("Books")
-                        .HasForeignKey("authorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("WebAPI.Infrastructure.Entities.Author", b =>
-                {
-                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

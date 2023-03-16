@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.DTOs;
 using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
 
@@ -61,9 +62,9 @@ namespace WebAPI.Infrastructure.Services
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> AddAuthor(Author objAuthor)
+        public async Task<MessagingHelper<List<AuthorDTO>>> AddAuthor(AuthorDTO objAuthor)
         {
-            var response = new MessagingHelper<List<Author>>();
+            var response = new MessagingHelper<List<AuthorDTO>>();
             string errorMessage = "Error occurred while adding data";
             string createdMessage = "Author created.";
 
@@ -76,12 +77,14 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-           
 
-            _appDbContext.Authors.Add(objAuthor);
+            Author author = new Author();
+            author.name = objAuthor.name;
+
+            _appDbContext.Authors.Add(author);
             await _appDbContext.SaveChangesAsync();
 
-            response.Obj = new List<Author> { objAuthor };
+            response.Obj = new List<AuthorDTO> { objAuthor };
             response.Success = true;
             response.Message = createdMessage;
             return response;

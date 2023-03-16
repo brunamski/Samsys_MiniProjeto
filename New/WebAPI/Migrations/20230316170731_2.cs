@@ -4,7 +4,7 @@
 
 namespace WebAPI.Migrations
 {
-    public partial class entitiesUpdate2 : Migration
+    public partial class _2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

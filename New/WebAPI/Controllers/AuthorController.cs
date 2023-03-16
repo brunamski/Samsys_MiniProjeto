@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.DTOs;
 using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
 using WebAPI.Infrastructure.Services;
@@ -37,7 +38,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("criarAutor")]
 
-        public async Task<MessagingHelper<List<Author>>> AddAuthor(Author objAuthor)
+        public async Task<MessagingHelper<List<AuthorDTO>>> AddAuthor(AuthorDTO objAuthor)
         {
             return await _service.AddAuthor(objAuthor);
         }
