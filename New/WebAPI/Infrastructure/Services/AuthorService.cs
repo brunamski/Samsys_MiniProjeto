@@ -97,13 +97,6 @@ namespace WebAPI.Infrastructure.Services
             string notFoundMessage = "Author not found.";
             string updatedMessage = "Author updated.";
 
-            if (authorId != authorToUpdate.authorId  || authorToUpdate.name == null)
-            {
-                response.Success = false;
-                response.Message = errorMessage;
-                return response;
-            }
-
             var author = await _appDbContext.Authors.FindAsync(authorId);
 
             if (author == null)
@@ -112,6 +105,15 @@ namespace WebAPI.Infrastructure.Services
                 response.Message = notFoundMessage;
                 return response;
             }
+            
+            if (authorId != authorToUpdate.authorId  || authorToUpdate.name == null)
+            {
+                response.Success = false;
+                response.Message = errorMessage;
+                return response;
+            }
+
+            
 
             author.authorId = authorToUpdate.authorId;
             author.name = authorToUpdate.name;

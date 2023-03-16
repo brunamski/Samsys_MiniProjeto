@@ -66,10 +66,10 @@ namespace WebAPI.Infrastructure.Services
             var response = new MessagingHelper<List<Book>>();
             string errorMessage = "Error occurred while adding data";
             string isbnAlreadyExistsMessage = "Book with the provided ISBN already exists.";
+            string authorNotExists = "Author provided does not exist.";
             string createdMessage = "Book created.";
 
-
-
+            //validations
             if (objLivro.isbn.Length != 13 || objLivro.price < 0 || objLivro == null)
             {
                 response.Success = false;
@@ -77,11 +77,21 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
+            // Check if book exists
             var checkIfLivroExists = _appDbContext.Books.Find(objLivro.isbn);
             if (checkIfLivroExists != null && checkIfLivroExists.isbn == objLivro.isbn)
             {
                 response.Success = false;
                 response.Message = isbnAlreadyExistsMessage;
+                return response;
+            }
+
+            // Check if author exists
+            var checkIfAuthorExists = _appDbContext.Authors.Find(objLivro.authorId);
+            if (checkIfAuthorExists == null)
+            {
+                response.Success = false;
+                response.Message = authorNotExists;
                 return response;
             }
 
@@ -93,6 +103,7 @@ namespace WebAPI.Infrastructure.Services
             response.Message = createdMessage;
             return response;
         }
+
 
         public async Task<MessagingHelper<List<Book>>> UpdateLivro(string isbn, [FromBody] Book livroToUpdate)
         {
