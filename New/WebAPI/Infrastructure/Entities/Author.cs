@@ -8,5 +8,7 @@ namespace WebAPI.Infrastructure.Entities
         public long authorId { get; set; }
 
         public string name { get; set; }
+
+        public List<Book> books { get; set; }
     }
 }

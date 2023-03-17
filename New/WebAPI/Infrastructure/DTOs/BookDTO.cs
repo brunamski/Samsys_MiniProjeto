@@ -1,22 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebAPI.Infrastructure.Entities;
 
-namespace WebAPI.Infrastructure.Entities
+namespace WebAPI.Infrastructure.DTOs
 {
-    public class Book
+    public class BookDTO
     {
-        [Key]
         public string isbn { get; set; }
-
-        [Column(TypeName = "nvarchar(100)")]
+   
         public string name { get; set; }
 
         public long authorId { get; set; }
 
-        [Column(TypeName = "decimal(18, 2)")]
         public decimal price { get; set; }
 
-        public Author author { get; set; }
+        public string author { get; set; }
     }
 }

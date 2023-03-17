@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Entities;
+using WebAPI.Infrastructure.DTOs;
 using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
 using WebAPI.Infrastructure.Services;
@@ -21,14 +22,14 @@ namespace WebAPI.Controllers
 
         [HttpGet]
         [Route("livros")]
-        public async Task<MessagingHelper<List<Book>>> GetAll()
+        public async Task<MessagingHelper<List<BookDTO>>> GetAll()
         {
             return await _service.GetLivros();
         }
 
         [HttpGet]
         [Route("livros/{isbn}")]
-        public async Task<MessagingHelper<List<Book>>> GetBookByISBN(string isbn)
+        public async Task<MessagingHelper<List<BookDTO>>> GetBookByISBN(string isbn)
         {
             return await _service.GetLivro(isbn);
         }
@@ -37,14 +38,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         [Route("criarLivro")]
         
-        public async Task<MessagingHelper<List<Book>>> AddLivro(Book objLivro)
+        public async Task<MessagingHelper<List<AddBookDTO>>> AddLivro(AddBookDTO objLivro)
         {
             return await _service.AddLivro(objLivro);
         }
         
         [HttpPatch]
         [Route("atualizarLivro/{isbn}")]
-        public async Task<MessagingHelper<List<Book>>> UpdateLivro(string isbn, [FromBody] Book livroToUpdate)
+        public async Task<MessagingHelper<List<AddBookDTO>>> UpdateLivro(string isbn, [FromBody] AddBookDTO livroToUpdate)
         {
             return await _service.UpdateLivro(isbn, livroToUpdate);
         }
@@ -54,7 +55,7 @@ namespace WebAPI.Controllers
         
         [HttpDelete]
         [Route("apagarLivro/{isbn}")]
-        public async Task<MessagingHelper<List<Book>>> DeleteLivro(string isbn)
+        public async Task<MessagingHelper<List<AddBookDTO>>> DeleteLivro(string isbn)
         {
             return await _service.DeleteLivro(isbn);
         }

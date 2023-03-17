@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using WebAPI.Entities;
 using WebAPI.Infrastructure.DTOs;
 using WebAPI.Infrastructure.Entities;
 using WebAPI.Infrastructure.Helpers;
+using WebAPI.Mappers;
 
 namespace WebAPI.Infrastructure.Services
 {
@@ -16,19 +18,23 @@ namespace WebAPI.Infrastructure.Services
     {
 
         private readonly AppDBContext _appDbContext;
-        public AuthorService(AppDBContext appDbContext)
+        private readonly IMapper _mapper;
+        public AuthorService(AppDBContext appDbContext, IMapper mapper)
         {
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
 
 
-        public async Task<MessagingHelper<List<Author>>> GetAuthors()
+        public async Task<MessagingHelper<List<GetAuthorsInfoDTO>>> GetAuthors()
         {
-            var response = new MessagingHelper<List<Author>>();
+            var response = new MessagingHelper<List<GetAuthorsInfoDTO>>();
             string errorMessage = "Error occurred while obtaining data";
 
 
             var checkAuthors = await _appDbContext.Authors.ToListAsync();
+            var getAuthorsInfoDTO = _mapper.Map<List<GetAuthorsInfoDTO>>(checkAuthors);
+
             if (checkAuthors == null)
             {
                 response.Success = false;
@@ -36,18 +42,19 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            response.Obj = checkAuthors;
+            response.Obj = getAuthorsInfoDTO;
             response.Success = true;
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> GetAuthor(long Id)
+        public async Task<MessagingHelper<List<GetAuthorsInfoDTO>>> GetAuthor(long authorId)
         {
-            var response = new MessagingHelper<List<Author>>();
+            var response = new MessagingHelper<List<GetAuthorsInfoDTO>>();
             string notFoundMessage = "Author not found.";
             string foundMessage = "Author found.";
 
-            var author = _appDbContext.Authors.Find(Id);
+            var author = _appDbContext.Authors.Find(authorId);
+            var getAuthorsInfoDTO = _mapper.Map<GetAuthorsInfoDTO>(author);
 
             if (author == null)
             {
@@ -56,7 +63,7 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
-            response.Obj = new List<Author> { author };
+            response.Obj = new List<GetAuthorsInfoDTO> { getAuthorsInfoDTO };
             response.Success = true;
             response.Message = foundMessage;
             return response;
@@ -77,12 +84,16 @@ namespace WebAPI.Infrastructure.Services
                 return response;
             }
 
+            // tentar usar o mapper
 
-            Author author = new Author();
-            author.name = objAuthor.name;
+            // Map AuthorDTO to Author entity
+            var author = _mapper.Map<Author>(objAuthor);
 
             _appDbContext.Authors.Add(author);
             await _appDbContext.SaveChangesAsync();
+
+            // Map Author entity back to AuthorDTO
+            //var authorDTO = _mapper.Map<AuthorDTO>(author);
 
             response.Obj = new List<AuthorDTO> { objAuthor };
             response.Success = true;
@@ -90,9 +101,9 @@ namespace WebAPI.Infrastructure.Services
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> UpdateAuthor(long authorId, [FromBody] Author authorToUpdate)
+        public async Task<MessagingHelper<List<GetAuthorsInfoDTO>>> UpdateAuthor(long authorId, [FromBody] GetAuthorsInfoDTO authorToUpdate)
         {
-            var response = new MessagingHelper<List<Author>>();
+            var response = new MessagingHelper<List<GetAuthorsInfoDTO>>();
             string errorMessage = "Error occurred while updating data";
             string notFoundMessage = "Author not found.";
             string updatedMessage = "Author updated.";
@@ -121,27 +132,31 @@ namespace WebAPI.Infrastructure.Services
             _appDbContext.Entry(author).State = EntityState.Modified;
             await _appDbContext.SaveChangesAsync();
 
-            response.Obj = new List<Author> { author };
+            var getAuthorsInfoDTO = _mapper.Map<GetAuthorsInfoDTO>(author);
+
+            response.Obj = new List<GetAuthorsInfoDTO> { getAuthorsInfoDTO } ;
             response.Success = true;
             response.Message = updatedMessage;
             return response;
         }
 
-        public async Task<MessagingHelper<List<Author>>> DeleteAuthor(long authorId)
+        public async Task<MessagingHelper<List<GetAuthorsInfoDTO>>> DeleteAuthor(long authorId)
         {
 
-            var response = new MessagingHelper<List<Author>>();
+            var response = new MessagingHelper<List<GetAuthorsInfoDTO>>();
             string notFoundMessage = "Author not found.";
             string deletedMessage = "Author deleted.";
 
             var checkIfAuthorExists = _appDbContext.Authors.Find(authorId);
+
+            var getAuthorsInfoDTO = _mapper.Map<GetAuthorsInfoDTO>(checkIfAuthorExists);
 
             if (checkIfAuthorExists != null)
             {
                 _appDbContext.Entry(checkIfAuthorExists).State = EntityState.Deleted;
                 _appDbContext.SaveChanges();
 
-                response.Obj = new List<Author> { checkIfAuthorExists };
+                response.Obj = new List<GetAuthorsInfoDTO> { getAuthorsInfoDTO };
                 response.Success = true;
                 response.Message = deletedMessage;
                 return response;
@@ -153,6 +168,8 @@ namespace WebAPI.Infrastructure.Services
             return response;
 
         }
+
+
 
     }
 

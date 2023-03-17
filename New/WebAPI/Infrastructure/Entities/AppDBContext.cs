@@ -21,7 +21,13 @@ namespace WebAPI.Entities
                 t.Property(s => s.authorId).UseIdentityColumn();
 
                 t.HasKey(r => r.authorId);
-            }); 
+            });
+
+            builder.Entity<Book>(t =>
+            {
+                t.HasKey(r => r.isbn);
+                t.HasOne(x => x.author).WithMany(x => x.books).HasForeignKey(x => x.authorId);
+            });
         }
     }
 }

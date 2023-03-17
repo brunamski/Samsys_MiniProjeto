@@ -540,3 +540,8 @@ C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\obj\Debug\net6.0\refi
 C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\obj\Debug\net6.0\WebAPI.pdb
 C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\obj\Debug\net6.0\WebAPI.genruntimeconfig.cache
 C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\obj\Debug\net6.0\ref\WebAPI.dll
+C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\HUAWEI\source\repos\Samsys_MiniProjeto\New\WebAPI\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
